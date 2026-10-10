@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CA Final Suggested Answers</title>
+<meta name="description" content="Quick links to ICAI suggested answers for every CA Final attempt from May 2018 to May 2026.">
+<style>
+:root{--bg:#f5f6fa;--card:#fff;--text:#1c2030;--muted:#677087;--line:#dde1ec;--accent:#2f5bea;--accent-t:#fff;--warn-bg:#fff6e0;--warn-t:#7a5a00}
+@media (prefers-color-scheme:dark){:root{--bg:#12141c;--card:#1b1e29;--text:#e8ebf5;--muted:#9aa3bb;--line:#2b3042;--accent:#6c8cff;--accent-t:#0e1220;--warn-bg:#3a2f10;--warn-t:#f1d58a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:32px 16px 48px}
+h1{font-size:1.6rem;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 24px}
+.boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:620px){.boxes{grid-template-columns:1fr}}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+select{width:100%;padding:12px;font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:10px}
+select:disabled{opacity:.5}
+select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#out{margin-top:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+.card h2{font-size:1rem;margin:0 0 4px}
+.tag{display:inline-block;font-size:.75rem;color:var(--muted);margin-bottom:12px}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-t);text-decoration:none;font-weight:600;padding:12px 18px;border-radius:10px}
+.btn:hover{filter:brightness(1.08)}
+.note{font-size:.85rem;color:var(--muted);margin:10px 0 0}
+.warn{background:var(--warn-bg);color:var(--warn-t);border-radius:10px;padding:10px 12px;font-size:.88rem;margin-top:12px}
+.empty{color:var(--muted);text-align:center;padding:28px 0}
+.more{font-size:.9rem;margin-top:6px}
+.more a{color:var(--accent)}
+footer{margin-top:32px;font-size:.8rem;color:var(--muted)}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+<h1>CA Final – Suggested Answers</h1>
+<p class="sub">Pick a subject, year and attempt to get the ICAI suggested-answer PDF (May 2018 – May 2026).</p>
+<div class="boxes">
+ <div><label for="sub">Subject</label><select id="sub"></select></div>
+ <div><label for="yr">Year</label><select id="yr"></select></div>
+ <div><label for="mo">Month</label><select id="mo"></select></div>
+</div>
+<div id="out" aria-live="polite"></div>
+</main>
+<script>
+const SUBJECTS={FR:"Financial Reporting (FR)",AFM:"Advanced Financial Management (AFM)",AUD:"Advanced Auditing, Assurance & Professional Ethics",DT:"Direct Tax Laws & International Taxation (DT)",IDT:"Indirect Tax Laws (IDT)",IBS:"Integrated Business Solutions (IBS)"};
+const N16={AFM:"Paper 2 – Strategic Financial Management (SFM)",AUD:"Paper 3 – Advanced Auditing & Professional Ethics",DT:"Paper 7 – Direct Tax Laws & International Taxation",IDT:"Paper 8 – Indirect Tax Laws",IBS:"Paper 6F – Multidisciplinary Case Study (precursor of IBS)"};
+const DATA={"2026":{"May":{"page":"https://www.icai.org/post/sugg-ans-final-may2026","sets":[{"s":"2023 scheme","i":{"FR":{"u":"pdfs/2026-May_FR.pdf"},"AFM":{"u":"pdfs/2026-May_AFM.pdf"},"AUD":{"u":"pdfs/2026-May_AUD.pdf"},"DT":{"u":"pdfs/2026-May_DT.pdf"},"IDT":{"u":"pdfs/2026-May_IDT.pdf"},"IBS":{"u":"pdfs/2026-May_IBS.pdf"}}}]},"Jan":{"page":"https://www.icai.org/post/sugg-ans-final-jan2026","sets":[{"s":"2023 scheme","i":{"FR":{"u":"pdfs/2026-Jan_FR.pdf"},"AFM":{"u":"pdfs/2026-Jan_AFM.pdf"},"AUD":{"u":"pdfs/2026-Jan_AUD.pdf"},"DT":{"u":"pdfs/2026-Jan_DT.pdf"},"IDT":{"u":"pdfs/2026-Jan_IDT.pdf"},"IBS":{"u":"pdfs/2026-Jan_IBS.pdf"}}}]}},"2025":{"Sep":{"page":"https://www.icai.org/post/sugg-ans-final-sep2025","sets":[{"s":"2023 scheme","i":{"FR":{"u":"pdfs/2025-Sep_FR.pdf"},"AFM":{"u":"pdfs/2025-Sep_AFM.pdf"},"AUD":{"u":"pdfs/2025-Sep_AUD.pdf"},"DT":{"u":"pdfs/2025-Sep_DT.pdf"},"IDT":{"u":"pdfs/2025-Sep_IDT.pdf"},"IBS":{"u":"pdfs/2025-Sep_IBS.pdf"}}}]},"May":{"page":"https://www.icai.org/post/sugg-ans-final-may2025","sets":[{"s":"2023 scheme","i":{"FR":{"u":"pdfs/2025-May_FR.pdf"},"AFM":{"u":"pdfs/2025-May_AFM.pdf"},"AUD":{"u":"pdfs/2025-May_AUD.pdf"},"DT":{"u":"pdfs/2025-May_DT.pdf"},"IDT":{"u":"pdfs/2025-May_IDT.pdf"},"IBS":{"u":"pdfs/2025-May_IBS.pdf"}}}]}},"2024":{"Nov":{"page":"https://www.icai.org/post/sugg-ans-final-nov2024","sets":[{"s":"2023 scheme","i":{"FR":{"u":"pdfs/2024-Nov_FR.pdf"},"AFM":{"u":"pdfs/2024-Nov_AFM.pdf"},"AUD":{"u":"pdfs/2024-Nov_AUD.pdf"},"DT":{"u":"pdfs/2024-Nov_DT.pdf"},"IDT":{"u":"pdfs/2024-Nov_IDT.pdf"},"IBS":{"u":"pdfs/2024-Nov_IBS.pdf"}}}]},"May":{"page":"https://www.icai.org/post/sugg-ans-final-may2024","sets":[{"s":"2023 scheme","i":{"FR":{"u":"pdfs/2024-May_FR.pdf"},"AFM":{"u":"pdfs/2024-May_AFM.pdf"},"AUD":{"u":"pdfs/2024-May_AUD.pdf"},"DT":{"u":"pdfs/2024-May_DT.pdf"},"IDT":{"u":"pdfs/2024-May_IDT.pdf"},"IBS":{"u":"pdfs/2024-May_IBS.pdf"}}}]}},"2023":{"Nov":{"page":null,"sets":[{"s":"2016 scheme (Final \u2013 New)","i":{"FR":{"u":"pdfs/2023-Nov_FR.pdf"},"AFM":{"u":"pdfs/2023-Nov_AFM.pdf"},"AUD":{"u":"pdfs/2023-Nov_AUD.pdf"},"DT":{"u":"pdfs/2023-Nov_DT.pdf"},"IDT":{"u":"pdfs/2023-Nov_IDT.pdf"},"IBS":{"u":"pdfs/2023-Nov_IBS.pdf"}}}]},"May":{"page":null,"sets":[{"s":"2016 scheme (Final \u2013 New)","i":{"FR":{"u":"pdfs/2023-May_FR.pdf"},"AFM":{"u":"pdfs/2023-May_AFM.pdf"},"AUD":{"u":"pdfs/2023-May_AUD.pdf"},"DT":{"u":"pdfs/2023-May_DT.pdf"},"IDT":{"u":"pdfs/2023-May_IDT.pdf"},"IBS":{"u":"pdfs/2023-May_IBS.pdf"}}}]}},"2022":{"Nov":{"page":null,"sets":[{"s":"2016 scheme (Final \u2013 New)","i":{"FR":{"u":"pdfs/2022-Nov_FR.pdf"},"AFM":{"u":"pdfs/2022-Nov_AFM.pdf"},"AUD":{"u":"pdfs/2022-Nov_AUD.pdf"},"DT":{"u":"pdfs/2022-Nov_DT.pdf"},"IDT":{"u":"pdfs/2022-Nov_IDT.pdf"},"IBS":{"u":"pdfs/2022-Nov_IBS.pdf"}}}]},"May":{"page":null,"sets":[{"s":"2016 scheme (Final \u2013 New)","i":{"FR":{"u":"pdfs/2022-May_FR.pdf"},"AFM":{"u":"pdfs/2022-May_AFM.pdf"},"AUD":{"u":"pdfs/2022-May_AUD.pdf"},"DT":{"u":"pdfs/2022-May_DT.pdf"},"IDT":{"u":"pdfs/2022-May_IDT.pdf"},"IBS":{"u":"pdfs/2022-May_IBS.pdf"}}}]}},"2021":{"Dec":{"page":null,"sets":[{"s":"2016 scheme (Final \u2013 New)","i":{"FR":{"u":"pdfs/2021-Dec_FR.pdf"},"AFM":{"u":"pdfs/2021-Dec_AFM.pdf"},"AUD":{"u":"pdfs/2021-Dec_AUD.pdf"},"DT":{"u":"pdfs/2021-Dec_DT.pdf"},"IDT":{"u":"pdfs/2021-Dec_IDT.pdf"},"IBS":{"u":"pdfs/2021-Dec_IBS.pdf"}}}]},"Jul":{"page":null,"sets":[{"s":"x2016","i":{"FR":{"u":"pdfs/2021-Jul_FR.pdf"},"AFM":{"u":"pdfs/2021-Jul_AFM.pdf"},"AUD":{"u":"pdfs/2021-Jul_AUD.pdf"},"DT":{"u":"pdfs/2021-Jul_DT.pdf"},"IDT":{"u":"pdfs/2021-Jul_IDT.pdf"},"IBS":{"u":"pdfs/2021-Jul_IBS.pdf","m":1}}}]},"Jan":{"page":null,"sets":[{"s":"x2016","i":{"FR":{"u":"pdfs/2021-Jan_FR.pdf"},"AFM":{"u":"pdfs/2021-Jan_AFM.pdf"},"AUD":{"u":"pdfs/2021-Jan_AUD.pdf"},"DT":{"u":"pdfs/2021-Jan_DT.pdf"},"IDT":{"u":"pdfs/2021-Jan_IDT.pdf"},"IBS":{"u":"pdfs/2021-Jan_IBS.pdf","m":1}}}]}},"2020":{"Nov":{"page":null,"sets":[{"s":"2016 scheme (Final \u2013 New)","i":{"FR":{"u":"pdfs/2020-Nov_FR.pdf"},"AFM":{"u":"pdfs/2020-Nov_AFM.pdf"},"AUD":{"u":"pdfs/2020-Nov_AUD.pdf"},"DT":{"u":"pdfs/2020-Nov_DT.pdf"},"IDT":{"u":"pdfs/2020-Nov_IDT.pdf"},"IBS":{"u":"pdfs/2020-Nov_IBS.pdf"}}}]}},"2019":{"Nov":{"page":null,"sets":[{"s":"x2016","i":{"FR":{"u":"pdfs/2019-Nov_FR.pdf"},"AFM":{"u":"pdfs/2019-Nov_AFM.pdf"},"AUD":{"u":"pdfs/2019-Nov_AUD.pdf"},"DT":{"u":"pdfs/2019-Nov_DT.pdf"},"IDT":{"u":"pdfs/2019-Nov_IDT.pdf"},"IBS":{"u":"pdfs/2019-Nov_IBS.pdf","m":1}}}]},"May":{"page":null,"sets":[{"s":"x2016","i":{"FR":{"u":"pdfs/2019-May_FR.pdf"},"AFM":{"u":"pdfs/2019-May_AFM.pdf"},"AUD":{"u":"pdfs/2019-May_AUD.pdf"},"DT":{"u":"pdfs/2019-May_DT.pdf"},"IDT":{"u":"pdfs/2019-May_IDT.pdf"},"IBS":{"u":"pdfs/2019-May_IBS.pdf","m":1}}}]}},"2018":{"Nov":{"page":null,"sets":[{"s":"x2016","i":{"FR":{"u":"pdfs/2018-Nov_FR.pdf"},"AFM":{"u":"pdfs/2018-Nov_AFM.pdf"},"AUD":{"u":"pdfs/2018-Nov_AUD.pdf"},"DT":{"u":"pdfs/2018-Nov_DT.pdf"},"IDT":{"u":"pdfs/2018-Nov_IDT.pdf"},"IBS":{"u":"pdfs/2018-Nov_IBS.pdf","m":1}}}]},"May":{"page":null,"sets":[{"s":"2016 scheme (Final \u2013 New)","i":{"FR":{"u":"pdfs/2018-May_FR.pdf"},"AFM":{"u":"pdfs/2018-May_AFM.pdf"},"AUD":{"u":"pdfs/2018-May_AUD.pdf"},"DT":{"u":"pdfs/2018-May_DT.pdf"},"IDT":{"u":"pdfs/2018-May_IDT.pdf"}}}]}}};
+const MORD={Jan:1,May:2,Jul:3,Sep:4,Nov:5,Dec:6};
+const $=id=>document.getElementById(id);
+const sub=$("sub"),yr=$("yr"),mo=$("mo"),out=$("out");
+function fill(sel,ph,items){sel.innerHTML="";const o=document.createElement("option");o.value="";o.textContent=ph;sel.appendChild(o);items.forEach(([v,t])=>{const e=document.createElement("option");e.value=v;e.textContent=t;sel.appendChild(e)})}
+fill(sub,"Select subject",Object.entries(SUBJECTS));
+fill(yr,"Select year",Object.keys(DATA).sort((a,b)=>b-a).map(y=>[y,y]));
+fill(mo,"Select year first",[]);mo.disabled=true;
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+yr.addEventListener("change",()=>{
+ if(!yr.value){fill(mo,"Select year first",[]);mo.disabled=true}
+ else{const ms=Object.keys(DATA[yr.value]).sort((a,b)=>MORD[a]-MORD[b]);fill(mo,"Select month",ms.map(m=>[m,{Jan:"January",May:"May",Jul:"July",Sep:"September",Nov:"November",Dec:"December"}[m]]));mo.disabled=false}
+ render()});
+sub.addEventListener("change",render);mo.addEventListener("change",render);
+function render(){
+ out.innerHTML="";
+ if(!(sub.value&&yr.value&&mo.value)){out.appendChild(el("div","empty","Choose all three to see the link."));return}
+ const att=DATA[yr.value][mo.value];let shown=0;
+ att.sets.forEach(s=>{
+  const it=s.i[sub.value];if(!it)return;shown++;
+  const c=el("div","card");
+  const nm=s.s.indexOf("2016")>=0?N16:null;
+  c.appendChild(el("h2","",nm&&nm[sub.value]?nm[sub.value]:(nm&&sub.value==="FR"?"Paper 1 – Financial Reporting":SUBJECTS[sub.value])));
+  c.appendChild(el("div","tag",mo.options[mo.selectedIndex].text+" "+yr.value));
+  const a=el("a","btn",it.g?"Open "+it.g+" suggested answers (PDF)":"Open suggested answers (PDF)");
+  a.href=it.u;a.target="_blank";a.rel="noopener";
+  const box=el("div");box.appendChild(a);c.appendChild(box);
+  if(it.g)c.appendChild(el("p","note","ICAI published this attempt as a combined "+it.g+" PDF; this paper is inside it."));
+  if(it.m&&sub.value==="IBS")c.appendChild(el("div","warn","Unofficial copy (not from ICAI's portal)."));
+  out.appendChild(c)});
+ if(!shown){const c=el("div","card");c.appendChild(el("h2","","Not available"));c.appendChild(el("p","note",SUBJECTS[sub.value]+" has no suggested-answer link for "+mo.options[mo.selectedIndex].text+" "+yr.value+(sub.value==="IBS"?" (IBS exists only from the 2023 scheme; earlier attempts used Paper 6F case study)":"")+"."));out.appendChild(c)}
+ if(att.page){const d=el("div","more");const a=el("a","","All papers for this attempt on ICAI's site ↗");a.href=att.page;a.target="_blank";a.rel="noopener";d.appendChild(a);out.appendChild(d)}
+}
+render();
+</script>
+</body>
+</html>
