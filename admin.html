@@ -85,7 +85,7 @@ ol{margin:8px 0 0;padding-left:20px;font-size:.9rem;display:grid;gap:4px}
 
 <section id="add">
  <h2>Add files</h2>
- <p class="muted">Files named like <code>2026-May_FR.pdf</code> (suggested answer) or <code>2025-may_FR_CC_2_AIR7_Harsh-Garg_62-70.pdf</code> (certified copy) fill in by themselves. For anything else, set the details in the table.</p>
+ <p class="muted">Files named like <code>2026-May_FR.pdf</code> (suggested answer) or <code>2025-May_FR_CC_2_AIR7_Harsh-Garg_62-70.pdf</code> (certified copy) fill in by themselves. For anything else, set the details in the table.</p>
  <div id="drop" class="drop" tabindex="0" role="button"><strong>Drop PDFs here</strong> or click to choose<input id="pick" type="file" accept="application/pdf,.pdf" multiple hidden></div>
  <div id="rows" class="files"></div>
  <div class="row" id="goRow" hidden>
@@ -112,8 +112,6 @@ const REPO="Vedjai/CA-Final-Suggested-Answers",BRANCH="main";
 const CC_REPO="Vedjai/CA-Final-Certified-Copies",CC_SITE="https://vedjai.github.io/CA-Final-Certified-Copies/";
 const SUBJ=["FR","AFM","AUD","DT","IDT","IBS"];
 const SUBJ_NAME={FR:"FR",AFM:"AFM",AUD:"Audit",DT:"DT",IDT:"IDT",IBS:"IBS"};
-// Certified copies use the folder names from the PC: Audit rather than AUD.
-const CC_FOLDER={FR:"FR",AFM:"AFM",AUD:"Audit",DT:"DT",IDT:"IDT",IBS:"IBS"};
 const MONTHS=["Jan","May","Jul","Sep","Nov","Dec"];
 const $=id=>document.getElementById(id);
 const store={get(){try{return localStorage.getItem("gh_token")||""}catch(e){return ""}},set(v){try{v?localStorage.setItem("gh_token",v):localStorage.removeItem("gh_token")}catch(e){}}};
@@ -207,8 +205,8 @@ function problems(r){
 }
 function nextN(man,r){return Math.max(0,...man.certified.filter(e=>e.attempt===r.year+"-"+r.month&&e.subject===r.subject).map(e=>e.n))+1}
 function ccPath(r,n){
- const f=CC_FOLDER[r.subject],nm=r.name.trim().replace(/\s+/g,"-").replace(/[^A-Za-z-]/g,"");
- return "pdfs-CC/"+[r.year+"-"+r.month.toLowerCase(),f,"CC",n,r.rank.replace(/\s+/g,"").toUpperCase(),nm,(+r.marks)+"-"+(+r.max)].filter(Boolean).join("_")+".pdf";
+ const nm=r.name.trim().replace(/\s+/g,"-").replace(/[^A-Za-z-]/g,"");
+ return "pdfs-CC/"+[r.year+"-"+r.month,r.subject,"CC",n,r.rank.replace(/\s+/g,"").toUpperCase(),nm,(+r.marks)+"-"+(+r.max)].filter(Boolean).join("_")+".pdf";
 }
 function saPath(r){return "pdfs-SA/"+r.year+"-"+r.month+"_"+r.subject+".pdf"}
 function preview(r){
