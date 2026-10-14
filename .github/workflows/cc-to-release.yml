@@ -1,0 +1,45 @@
+# Moves certified copies that admin.html commits to cc-inbox/ onto the "certified-copies" release,
+# then deletes them from the repo so the Pages site stays small.
+name: Move certified copies to release
+
+on:
+  push:
+    branches: [main]
+    paths: ['cc-inbox/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cc-to-release
+  cancel-in-progress: false
+
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          files=(cc-inbox/*.pdf)
+          if [ ${#files[@]} -eq 0 ]; then echo "Nothing to move"; exit 0; fi
+          gh release view certified-copies >/dev/null 2>&1 || \
+            gh release create certified-copies --title "Certified copies" --notes "Certified copies linked from the site. Added through admin.html."
+          gh release upload certified-copies "${files[@]}" --clobber
+
+      - name: Remove from repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898599+github-actions[bot]@users.noreply.github.com"
+          git rm -q -r --ignore-unmatch cc-inbox
+          git diff --cached --quiet && exit 0
+          git commit -m "Move certified copies to release"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 5; done
+          exit 1
