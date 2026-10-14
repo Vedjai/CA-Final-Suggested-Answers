@@ -66,6 +66,7 @@ const sub=$("sub"),yr=$("yr"),mo=$("mo"),out=$("out");
 let DATA={},PAGES={};
 function fill(sel,ph,items){sel.innerHTML="";const o=document.createElement("option");o.value="";o.textContent=ph;sel.appendChild(o);items.forEach(([v,t])=>{const e=document.createElement("option");e.value=v;e.textContent=t;sel.appendChild(e)})}
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+const url=f=>/^https?:/.test(f)?f:FILE_BASE+f;
 function slot(a){const[y,m]=a.split("-");DATA[y]=DATA[y]||{};return DATA[y][m]=DATA[y][m]||{sa:{},cc:{}}}
 function build(man){
  DATA={};PAGES=man.pages||{};
@@ -92,14 +93,14 @@ function render(){
  c.appendChild(el("h2","",old?N16[s]:SUBJECTS[s]));
  c.appendChild(el("div","tag",MNAME[mo.value]+" "+yr.value));
  if(it){
-  const a=el("a","btn","Open suggested answers (PDF)");a.href=FILE_BASE+it.file;a.target="_blank";a.rel="noopener";
+  const a=el("a","btn","Open suggested answers (PDF)");a.href=url(it.file);a.target="_blank";a.rel="noopener";
   const box=el("div");box.appendChild(a);c.appendChild(box);
   if(it.unofficial)c.appendChild(el("div","warn","Unofficial copy (not from ICAI's portal)."));
  }else c.appendChild(el("p","note","No suggested answers for this paper"+(s==="IBS"&&old?" (IBS exists only from the 2023 scheme; earlier attempts used the Paper 6F case study).":".")));
  if(ccs.length){
   const d=el("div","cc");d.appendChild(el("h3","","Certified copies ("+ccs.length+")"));
   const ul=el("ul");
-  ccs.forEach(e=>{const li=el("li"),a=el("a");a.href=FILE_BASE+e.file;a.target="_blank";a.rel="noopener";
+  ccs.forEach(e=>{const li=el("li"),a=el("a");a.href=url(e.file);a.target="_blank";a.rel="noopener";
    const w=el("span","who");w.appendChild(el("span","rk",e.rank||"Copy "+e.n));if(e.name)w.appendChild(document.createTextNode(" · "+e.name));
    a.appendChild(w);a.appendChild(el("span","mk",e.marks+" / "+e.max));li.appendChild(a);ul.appendChild(li)});
   d.appendChild(ul);c.appendChild(d);
