@@ -76,7 +76,7 @@ ol{margin:8px 0 0;padding-left:20px;font-size:.9rem;display:grid;gap:4px}
   <summary>How to make a token</summary>
   <ol>
    <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub's new fine-grained token page</a>.</li>
-   <li>Under Repository access, choose <b>Only select repositories</b> and pick <b>CA-Final-Suggested-Answers</b>.</li>
+   <li>Under Repository access, choose <b>Only select repositories</b> and pick <b>CA-Final-Suggested-Answers</b> and <b>CA-Final-Certified-Copies</b>.</li>
    <li>Under Permissions, set <b>Contents</b> to <b>Read and write</b>. Nothing else is needed.</li>
    <li>Generate it, copy it, and paste it above.</li>
   </ol>
@@ -107,7 +107,9 @@ ol{margin:8px 0 0;padding-left:20px;font-size:.9rem;display:grid;gap:4px}
 </main>
 <script>
 const DEMO=false;
-const REPO="Vedjai/CA-Final-Suggested-Answers",BRANCH="main",API="https://api.github.com/repos/"+REPO;
+const REPO="Vedjai/CA-Final-Suggested-Answers",BRANCH="main";
+// Certified copies live in their own repository and GitHub Pages site, to stay under the 1 GB site limit.
+const CC_REPO="Vedjai/CA-Final-Certified-Copies",CC_SITE="https://vedjai.github.io/CA-Final-Certified-Copies/";
 const SUBJ=["FR","AFM","AUD","DT","IDT","IBS"];
 const SUBJ_NAME={FR:"FR",AFM:"AFM",AUD:"Audit",DT:"DT",IDT:"IDT",IBS:"IBS"};
 // Certified copies use the folder names from the PC: Audit rather than AUD.
@@ -123,8 +125,8 @@ function normSubj(s){s=(s||"").toUpperCase();return s==="AUDIT"?"AUD":SUBJ.inclu
 function normMonth(m){m=(m||"").slice(0,3).toLowerCase();return MONTHS.find(x=>x.toLowerCase()===m)||""}
 
 // ---------- GitHub API ----------
-async function gh(path,opts={}){
- const r=await fetch(API+path,{...opts,headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(opts.body?{"Content-Type":"application/json"}:{})}});
+async function gh(path,opts={},repo=REPO){
+ const r=await fetch("https://api.github.com/repos/"+repo+path,{...opts,headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(opts.body?{"Content-Type":"application/json"}:{})}});
  if(!r.ok){const e=new Error((await r.json().catch(()=>({}))).message||r.statusText);e.status=r.status;throw e}
  return r.status===204?null:r.json();
 }
@@ -147,6 +149,17 @@ async function commit(message,change){
   catch(e){if(e.status!==422||attempt===2)throw e}
  }
 }
+// A plain commit of file changes to another repository (no manifest).
+async function commitFiles(repo,message,files){
+ for(let attempt=0;attempt<3;attempt++){
+  const head=(await gh("/git/ref/heads/"+BRANCH,{},repo)).object.sha;
+  const base=await gh("/git/commits/"+head,{},repo);
+  const tree=await gh("/git/trees",{method:"POST",body:JSON.stringify({base_tree:base.tree.sha,tree:files})},repo);
+  const c=await gh("/git/commits",{method:"POST",body:JSON.stringify({message,tree:tree.sha,parents:[head]})},repo);
+  try{await gh("/git/refs/heads/"+BRANCH,{method:"PATCH",body:JSON.stringify({sha:c.sha})},repo);return}
+  catch(e){if(e.status!==422||attempt===2)throw e}
+ }
+}
 function sortManifest(m){
  const key=a=>{const[y,mo]=a.split("-");return y*10+MONTHS.indexOf(mo)};
  m.suggested.sort((a,b)=>key(b.attempt)-key(a.attempt)||SUBJ.indexOf(a.subject)-SUBJ.indexOf(b.subject));
@@ -161,9 +174,11 @@ async function check(){
  try{
   const r=await gh("");
   if(!r.permissions||!r.permissions.push){say("tokStatus","This token can read the repository but not upload. Give it Contents: Read and write.","bad");return}
-  say("tokStatus","Token works. You can upload to "+r.full_name+".","ok");
+  const cc=await gh("",{},CC_REPO).catch(e=>e);
+  if(cc instanceof Error||!cc.permissions||!cc.permissions.push)say("tokStatus","Suggested answers will upload, but certified copies won't: this token can't write to "+CC_REPO.split("/")[1]+". Add that repository to the token with Contents: Read and write.","bad");
+  else say("tokStatus","Token works. You can upload suggested answers and certified copies.","ok");
   await loadManifest();
- }catch(e){say("tokStatus",e.status===401?"GitHub rejected this token. It may have expired; make a new one.":e.status===404?"This token can't see the repository. Pick CA-Final-Suggested-Answers when making it.":"Couldn't reach GitHub: "+e.message,"bad")}
+ }catch(e){say("tokStatus",e.status===401?"GitHub rejected this token. It may have expired; make a new one.":e.status===404?"This token can't see the repository. Pick CA-Final-Suggested-Answers and CA-Final-Certified-Copies when making it.":"Couldn't reach GitHub: "+e.message,"bad")}
 }
 $("save").onclick=()=>{token=$("tok").value.trim()||token;store.set(token);$("tok").value="";check()};
 $("forget").onclick=()=>{token="";store.set("");manifest=null;say("tokStatus","Token removed from this browser.");$("forget").hidden=true;renderManage()};
@@ -193,9 +208,9 @@ function problems(r){
 function nextN(man,r){return Math.max(0,...man.certified.filter(e=>e.attempt===r.year+"-"+r.month&&e.subject===r.subject).map(e=>e.n))+1}
 function ccPath(r,n){
  const f=CC_FOLDER[r.subject],nm=r.name.trim().replace(/\s+/g,"-").replace(/[^A-Za-z-]/g,"");
- return "certified-copies/"+f+"/"+[r.year+"-"+r.month.toLowerCase(),f,"CC",n,r.rank.replace(/\s+/g,"").toUpperCase(),nm,(+r.marks)+"-"+(+r.max)].filter(Boolean).join("_")+".pdf";
+ return "pdfs-CC/"+[r.year+"-"+r.month.toLowerCase(),f,"CC",n,r.rank.replace(/\s+/g,"").toUpperCase(),nm,(+r.marks)+"-"+(+r.max)].filter(Boolean).join("_")+".pdf";
 }
-function saPath(r){return "pdfs/"+r.year+"-"+r.month+"_"+r.subject+".pdf"}
+function saPath(r){return "pdfs-SA/"+r.year+"-"+r.month+"_"+r.subject+".pdf"}
 function preview(r){
  if(problems(r).length)return "";
  if(r.type==="sa")return saPath(r);
@@ -265,7 +280,18 @@ $("go").onclick=async()=>{
   // Upload in groups so a large batch shows progress and each group lands as one commit.
   for(let i=0;i<todo.length;i+=10){
    const group=todo.slice(i,i+10);
-   for(const r of group){r.state="up";refresh();if(!DEMO)r.blob=(await gh("/git/blobs",{method:"POST",body:JSON.stringify({content:await readB64(r.file),encoding:"base64"})})).sha}
+   for(const r of group){r.state="up";refresh();if(!DEMO)r.blob=(await gh("/git/blobs",{method:"POST",body:JSON.stringify({content:await readB64(r.file),encoding:"base64"})},r.type==="cc"?CC_REPO:REPO)).sha}
+   // Number the certified copies against the current list, then put their files in the copies repository before listing them.
+   const fresh=DEMO?manifest:await readManifest(BRANCH);
+   const used={};
+   for(const r of group)if(r.type==="cc"){
+    const att=r.year+"-"+r.month,k=att+"|"+r.subject;
+    const set=used[k]||(used[k]=new Set(fresh.certified.filter(e=>e.attempt===att&&e.subject===r.subject).map(e=>e.n)));
+    if(!r.n||set.has(r.n))r.n=Math.max(0,...set)+1;
+    set.add(r.n);r.path=ccPath(r,r.n);
+   }
+   const ccFiles=group.filter(r=>r.type==="cc").map(r=>({path:r.path,mode:"100644",type:"blob",sha:r.blob}));
+   if(ccFiles.length&&!DEMO)await commitFiles(CC_REPO,"Add "+group.filter(r=>r.type==="cc").map(r=>r.file.name).join(", ").slice(0,200),ccFiles);
    const files=[];
    const apply=man=>{
     files.length=0;
@@ -275,9 +301,8 @@ $("go").onclick=async()=>{
       const path=saPath(r);man.suggested=man.suggested.filter(e=>!(e.attempt===attempt&&e.subject===r.subject));
       man.suggested.push({attempt,subject:r.subject,file:path});files.push({path,mode:"100644",type:"blob",sha:r.blob});r.path=path;
      }else{
-      const n=r.n&&!man.certified.some(e=>e.attempt===attempt&&e.subject===r.subject&&e.n===r.n)?r.n:nextN(man,r);
-      const path=ccPath(r,n),e={attempt,subject:r.subject,file:path,n,rank:rankLabel(r.rank)||null,name:r.name.trim()||null,marks:+r.marks,max:+r.max};
-      man.certified=man.certified.filter(x=>x.file!==path);man.certified.push(e);files.push({path,mode:"100644",type:"blob",sha:r.blob});r.path=path;r.n=n;
+      const url=CC_SITE+r.path,e={attempt,subject:r.subject,file:url,n:r.n,rank:rankLabel(r.rank)||null,name:r.name.trim()||null,marks:+r.marks,max:+r.max};
+      man.certified=man.certified.filter(x=>x.file!==url);man.certified.push(e);
      }
     }
    };
@@ -319,7 +344,10 @@ function renderManage(){
    const drop=man=>{const k=it.kind==="sa"?"suggested":"certified";man[k]=man[k].filter(x=>x.file!==it.e.file)};
    try{
     if(DEMO)drop(manifest);
-    else await commit("Remove "+it.e.file,man=>{drop(man);return[{path:it.e.file,mode:"100644",type:"blob",sha:null}]});
+    else if(it.kind==="cc"){
+     if(it.e.file.startsWith(CC_SITE))await commitFiles(CC_REPO,"Remove "+it.e.file.slice(CC_SITE.length),[{path:it.e.file.slice(CC_SITE.length),mode:"100644",type:"blob",sha:null}]).catch(e=>{if(e.status!==422)throw e});
+     await commit("Remove certified copy "+it.e.file.split("/").pop(),man=>{drop(man);return[]});
+    }else await commit("Remove "+it.e.file,man=>{drop(man);return[{path:it.e.file,mode:"100644",type:"blob",sha:null}]});
     say("mStatus","Removed.","ok");fillAttempts();renderManage();
    }catch(e){say("mStatus","Couldn't remove it: "+e.message,"bad");b.disabled=false}
   };
