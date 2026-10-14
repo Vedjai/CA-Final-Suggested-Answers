@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Upload Papers</title>
+<style>
+:root{--bg:#f5f6fa;--card:#fff;--text:#1c2030;--muted:#677087;--line:#dde1ec;--accent:#2f5bea;--accent-t:#fff;--warn-bg:#fff6e0;--warn-t:#7a5a00;--ok:#1d7a46;--bad:#b42318;--soft:#eef1fb}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12141c;--card:#1b1e29;--text:#e8ebf5;--muted:#9aa3bb;--line:#2b3042;--accent:#6c8cff;--accent-t:#0e1220;--warn-bg:#3a2f10;--warn-t:#f1d58a;--ok:#5fd394;--bad:#ff8a80;--soft:#232838;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12141c;--card:#1b1e29;--text:#e8ebf5;--muted:#9aa3bb;--line:#2b3042;--accent:#6c8cff;--accent-t:#0e1220;--warn-bg:#3a2f10;--warn-t:#f1d58a;--ok:#5fd394;--bad:#ff8a80;--soft:#232838;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:1000px;margin:0 auto;padding-block:32px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+h1{font-size:1.5rem;margin:0}
+.sub{color:var(--muted);margin:4px 0 0}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px;min-width:0}
+h2{font-size:1rem;margin:0}
+p{margin:0}
+.muted{color:var(--muted);font-size:.88rem}
+label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+input,select{font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button{font:inherit;font-weight:600;border-radius:10px;padding:10px 16px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-t)}
+button:disabled{opacity:.5;cursor:default}
+button.link{border:0;background:none;padding:4px 6px;color:var(--accent);font-weight:500}
+button.danger{color:var(--bad)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row input{flex:1 1 260px}
+.status{font-size:.9rem}
+.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:24px;text-align:center;color:var(--muted);cursor:pointer}
+.drop.over{border-color:var(--accent);background:var(--soft)}
+.drop strong{color:var(--text)}
+.files{display:grid;gap:10px}
+.file{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:10px;min-width:0}
+.file.done{opacity:.7}
+.fhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:space-between}
+.fname{font-weight:600;overflow-wrap:anywhere;min-width:0}
+.fields{display:flex;flex-wrap:wrap;gap:10px}
+.f{display:grid;gap:4px;flex:1 1 110px;min-width:0}
+.f.wide{flex:2 1 180px}.f.sm{flex:0 1 90px}
+.f input,.f select{width:100%}
+.path{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+.pill{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--ok)}.pill.bad{color:var(--bad)}.pill.warn{background:var(--warn-bg);color:var(--warn-t)}
+.banner{background:var(--warn-bg);color:var(--warn-t);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.list{display:grid;gap:6px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;min-width:0}
+.item span{min-width:0;overflow-wrap:anywhere}
+.mk{font-variant-numeric:tabular-nums;color:var(--muted)}
+a{color:var(--accent)}
+details summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+ol{margin:8px 0 0;padding-left:20px;font-size:.9rem;display:grid;gap:4px}
+</style>
+</head>
+<body>
+<main>
+<header>
+ <h1>Upload papers</h1>
+ <p class="sub">Add suggested answers and certified copies. The public page picks them up about a minute after upload. <a href="./">Open the public page</a></p>
+</header>
+<div id="demo" class="banner" hidden>Preview only. Nothing here uploads to GitHub.</div>
+
+<section id="access">
+ <h2>GitHub access</h2>
+ <p class="muted">Only someone with a token for this repository can upload. The token stays in this browser and is never added to the site.</p>
+ <div class="row">
+  <input id="tok" type="password" autocomplete="off" placeholder="Paste your GitHub token (github_pat_…)">
+  <button id="save" class="primary">Save and check</button>
+  <button id="forget" class="link danger" hidden>Forget token</button>
+ </div>
+ <p id="tokStatus" class="status"></p>
+ <details>
+  <summary>How to make a token</summary>
+  <ol>
+   <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">GitHub's new fine-grained token page</a>.</li>
+   <li>Under Repository access, choose <b>Only select repositories</b> and pick <b>CA-Final-Suggested-Answers</b>.</li>
+   <li>Under Permissions, set <b>Contents</b> to <b>Read and write</b>. Nothing else is needed.</li>
+   <li>Generate it, copy it, and paste it above.</li>
+  </ol>
+ </details>
+</section>
+
+<section id="add">
+ <h2>Add files</h2>
+ <p class="muted">Files named like <code>2026-May_FR.pdf</code> (suggested answer) or <code>2025-may_FR_CC_2_AIR7_Harsh-Garg_62-70.pdf</code> (certified copy) fill in by themselves. For anything else, set the details in the table.</p>
+ <div id="drop" class="drop" tabindex="0" role="button"><strong>Drop PDFs here</strong> or click to choose<input id="pick" type="file" accept="application/pdf,.pdf" multiple hidden></div>
+ <div id="rows" class="files"></div>
+ <div class="row" id="goRow" hidden>
+  <button id="go" class="primary">Upload</button>
+  <button id="clear" class="link">Clear list</button>
+  <span id="upStatus" class="status"></span>
+ </div>
+</section>
+
+<section id="manage">
+ <h2>Files on the site</h2>
+ <div class="row">
+  <select id="mAtt" aria-label="Attempt"></select>
+  <select id="mSub" aria-label="Subject"></select>
+ </div>
+ <div id="mList" class="list"><p class="muted">Save your token to see what's on the site.</p></div>
+ <span id="mStatus" class="status"></span>
+</section>
+</main>
+<script>
+const DEMO=false;
+const REPO="Vedjai/CA-Final-Suggested-Answers",BRANCH="main",API="https://api.github.com/repos/"+REPO;
+const SUBJ=["FR","AFM","AUD","DT","IDT","IBS"];
+const SUBJ_NAME={FR:"FR",AFM:"AFM",AUD:"Audit",DT:"DT",IDT:"IDT",IBS:"IBS"};
+// Certified copies use the folder names from the PC: Audit rather than AUD.
+const CC_FOLDER={FR:"FR",AFM:"AFM",AUD:"Audit",DT:"DT",IDT:"IDT",IBS:"IBS"};
+const MONTHS=["Jan","May","Jul","Sep","Nov","Dec"];
+const $=id=>document.getElementById(id);
+const store={get(){try{return localStorage.getItem("gh_token")||""}catch(e){return ""}},set(v){try{v?localStorage.setItem("gh_token",v):localStorage.removeItem("gh_token")}catch(e){}}};
+let token=store.get(),manifest=null,rows=[],busy=false;
+
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function say(id,msg,kind){const e=$(id);e.textContent=msg;e.className="status"+(kind?" "+kind:"")}
+function normSubj(s){s=(s||"").toUpperCase();return s==="AUDIT"?"AUD":SUBJ.includes(s)?s:""}
+function normMonth(m){m=(m||"").slice(0,3).toLowerCase();return MONTHS.find(x=>x.toLowerCase()===m)||""}
+
+// ---------- GitHub API ----------
+async function gh(path,opts={}){
+ const r=await fetch(API+path,{...opts,headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(opts.body?{"Content-Type":"application/json"}:{})}});
+ if(!r.ok){const e=new Error((await r.json().catch(()=>({}))).message||r.statusText);e.status=r.status;throw e}
+ return r.status===204?null:r.json();
+}
+function b64ToText(b){const bin=atob(b.replace(/\n/g,""));return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0)))}
+async function readManifest(ref){
+ if(DEMO)return fetch("manifest.json").then(r=>r.json());
+ const f=await gh("/contents/manifest.json?ref="+ref);return JSON.parse(b64ToText(f.content));
+}
+// One commit: add blobs/deletions and the updated manifest, then move the branch. Retries if the branch moved meanwhile.
+async function commit(message,change){
+ for(let attempt=0;attempt<3;attempt++){
+  const ref=await gh("/git/ref/heads/"+BRANCH),head=ref.object.sha;
+  const base=await gh("/git/commits/"+head);
+  const man=await readManifest(head);
+  const extra=change(man);
+  sortManifest(man);
+  const tree=await gh("/git/trees",{method:"POST",body:JSON.stringify({base_tree:base.tree.sha,tree:[...extra,{path:"manifest.json",mode:"100644",type:"blob",content:JSON.stringify(man,null,1)+"\n"}]})});
+  const c=await gh("/git/commits",{method:"POST",body:JSON.stringify({message,tree:tree.sha,parents:[head]})});
+  try{await gh("/git/refs/heads/"+BRANCH,{method:"PATCH",body:JSON.stringify({sha:c.sha})});manifest=man;return}
+  catch(e){if(e.status!==422||attempt===2)throw e}
+ }
+}
+function sortManifest(m){
+ const key=a=>{const[y,mo]=a.split("-");return y*10+MONTHS.indexOf(mo)};
+ m.suggested.sort((a,b)=>key(b.attempt)-key(a.attempt)||SUBJ.indexOf(a.subject)-SUBJ.indexOf(b.subject));
+ m.certified.sort((a,b)=>key(b.attempt)-key(a.attempt)||SUBJ.indexOf(a.subject)-SUBJ.indexOf(b.subject)||a.n-b.n);
+}
+
+// ---------- Access ----------
+async function check(){
+ if(DEMO){say("tokStatus","Preview: token check skipped.","ok");await loadManifest();return}
+ if(!token){say("tokStatus","No token saved yet.");$("forget").hidden=true;return}
+ $("forget").hidden=false;say("tokStatus","Checking…");
+ try{
+  const r=await gh("");
+  if(!r.permissions||!r.permissions.push){say("tokStatus","This token can read the repository but not upload. Give it Contents: Read and write.","bad");return}
+  say("tokStatus","Token works. You can upload to "+r.full_name+".","ok");
+  await loadManifest();
+ }catch(e){say("tokStatus",e.status===401?"GitHub rejected this token. It may have expired; make a new one.":e.status===404?"This token can't see the repository. Pick CA-Final-Suggested-Answers when making it.":"Couldn't reach GitHub: "+e.message,"bad")}
+}
+$("save").onclick=()=>{token=$("tok").value.trim()||token;store.set(token);$("tok").value="";check()};
+$("forget").onclick=()=>{token="";store.set("");manifest=null;say("tokStatus","Token removed from this browser.");$("forget").hidden=true;renderManage()};
+
+// ---------- Add files ----------
+const SA_RE=/^(\d{4})-([a-z]{3})_([a-z]+)\.pdf$/i;
+const CC_RE=/^(\d{4})-([a-z]{3})_([a-z]+)_CC_(\d+)(?:_(AIR\d+|AIH))?(?:_([a-z][a-z-]*))?_(\d+)-(\d+)\.pdf$/i;
+function parse(file){
+ const r={file,type:"sa",subject:"",year:"",month:"",rank:"",name:"",marks:"",max:"",n:null,state:"",msg:""};
+ let m=file.name.match(CC_RE);
+ if(m){Object.assign(r,{type:"cc",year:m[1],month:normMonth(m[2]),subject:normSubj(m[3]),n:+m[4],rank:m[5]||"",name:(m[6]||"").replace(/-/g," "),marks:m[7],max:m[8]});return r}
+ m=file.name.match(SA_RE);
+ if(m){Object.assign(r,{year:m[1],month:normMonth(m[2]),subject:normSubj(m[3])})}
+ else{const y=file.name.match(/20\d\d/),mo=file.name.match(/jan|may|jul|sep|nov|dec/i),s=file.name.match(/\b(FR|AFM|SFM|AUD|Audit|DT|IDT|IBS)\b/i);
+  if(y)r.year=y[0];if(mo)r.month=normMonth(mo[0]);if(s)r.subject=s[0].toUpperCase()==="SFM"?"AFM":normSubj(s[0]);
+  if(/CC|certified/i.test(file.name))r.type="cc"}
+ return r;
+}
+function rankLabel(r){r=(r||"").replace(/\s+/g,"").toUpperCase();return/^AIR\d+$/.test(r)?"AIR "+r.slice(3):r==="AIH"?"AIH":r?null:""}
+function problems(r){
+ const p=[];
+ if(!r.subject)p.push("subject");if(!/^20\d\d$/.test(r.year))p.push("year");if(!r.month)p.push("month");
+ if(r.type==="cc"){if(rankLabel(r.rank)===null)p.push("rank (use AIR12, AIH or leave blank)");if(!(+r.marks>0))p.push("marks");if(!(+r.max>0))p.push("out of")}
+ if(r.file.type&&r.file.type!=="application/pdf")p.push("a PDF file");
+ return p;
+}
+function nextN(man,r){return Math.max(0,...man.certified.filter(e=>e.attempt===r.year+"-"+r.month&&e.subject===r.subject).map(e=>e.n))+1}
+function ccPath(r,n){
+ const f=CC_FOLDER[r.subject],nm=r.name.trim().replace(/\s+/g,"-").replace(/[^A-Za-z-]/g,"");
+ return "certified-copies/"+f+"/"+[r.year+"-"+r.month.toLowerCase(),f,"CC",n,r.rank.replace(/\s+/g,"").toUpperCase(),nm,(+r.marks)+"-"+(+r.max)].filter(Boolean).join("_")+".pdf";
+}
+function saPath(r){return "pdfs/"+r.year+"-"+r.month+"_"+r.subject+".pdf"}
+function preview(r){
+ if(problems(r).length)return "";
+ if(r.type==="sa")return saPath(r);
+ return ccPath(r,r.n||(manifest?nextN(manifest,r):"?"));
+}
+function addFiles(list){for(const f of list)if(/\.pdf$/i.test(f.name))rows.push(parse(f));renderRows()}
+const drop=$("drop"),pick=$("pick");
+drop.onclick=()=>pick.click();drop.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick.click()}};
+pick.onchange=()=>{addFiles(pick.files);pick.value=""};
+drop.ondragover=e=>{e.preventDefault();drop.classList.add("over")};
+drop.ondragleave=()=>drop.classList.remove("over");
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");addFiles(e.dataTransfer.files)};
+function sel(opts,val,on){const s=el("select");opts.forEach(([v,t])=>{const o=el("option",null,t);o.value=v;s.appendChild(o)});s.value=val;s.onchange=()=>on(s.value);return s}
+function inp(val,on,ph,type){const i=el("input");i.value=val;if(ph)i.placeholder=ph;if(type)i.type=type;i.oninput=()=>on(i.value);return i}
+function renderRows(){
+ const box=$("rows");box.innerHTML="";
+ $("goRow").hidden=!rows.length;
+ rows.forEach((r,i)=>{
+  const card=el("div","file"+(r.state==="done"?" done":"")),head=el("div","fhead"),fields=el("div","fields");
+  const upd=k=>v=>{r[k]=v;if(k!=="name"&&k!=="marks"&&k!=="max"&&k!=="rank")r.n=null;r.state="";refresh()};
+  const field=(lab,ctl,cls)=>{const f=el("label","f"+(cls?" "+cls:""));f.appendChild(el("span",null,lab));f.appendChild(ctl);fields.appendChild(f)};
+  head.appendChild(el("span","fname",r.file.name));
+  const right=el("span","row");r._st=el("span");right.appendChild(r._st);
+  r._rm=el("button","link danger","Remove");r._rm.onclick=()=>{rows.splice(i,1);renderRows()};right.appendChild(r._rm);head.appendChild(right);
+  field("Type",sel([["sa","Suggested answer"],["cc","Certified copy"]],r.type,v=>{upd("type")(v);renderRows()}),"wide");
+  field("Subject",sel([["","Choose"],...SUBJ.map(s=>[s,SUBJ_NAME[s]])],r.subject,upd("subject")));
+  field("Year",inp(r.year,upd("year"),"2026","number"),"sm");
+  field("Month",sel([["","Choose"],...MONTHS.map(m=>[m,m])],r.month,upd("month")),"sm");
+  if(r.type==="cc"){
+   field("Rank",inp(r.rank,upd("rank"),"AIR7 or blank"),"sm");
+   field("Name",inp(r.name,upd("name"),"Optional"),"wide");
+   field("Marks",inp(r.marks,upd("marks"),"","number"),"sm");
+   field("Out of",inp(r.max,upd("max"),"70","number"),"sm");
+  }
+  card.appendChild(head);card.appendChild(fields);
+  r._pc=el("div","path");card.appendChild(r._pc);
+  card.querySelectorAll("input,select").forEach(x=>x.disabled=r.state==="done"||busy);r._rm.disabled=busy;
+  box.appendChild(card);
+ });
+ refresh();
+}
+function refresh(){
+ let ok=0;
+ rows.forEach(r=>{
+  const p=problems(r);r._pc.textContent=p.length?"":"Saves as "+preview(r);r._st.innerHTML="";
+  let pill;
+  if(r.state==="done")pill=el("span","pill ok","Uploaded");
+  else if(r.state==="err")pill=el("span","pill bad",r.msg);
+  else if(r.state==="up")pill=el("span","pill","Uploading…");
+  else if(p.length)pill=el("span","pill warn","Needs "+p.join(", "));
+  else{ok++;
+   const dup=manifest&&r.type==="sa"&&manifest.suggested.some(e=>e.attempt===r.year+"-"+r.month&&e.subject===r.subject);
+   pill=el("span","pill"+(dup?" warn":""),dup?"Replaces current file":"Ready")}
+  r._st.appendChild(pill);r._rm.hidden=r.state==="done";
+ });
+ const pending=rows.filter(r=>r.state!=="done");
+ $("go").disabled=busy||!pending.length||ok<pending.length;
+ $("go").textContent=busy?"Uploading…":"Upload "+pending.length+" file"+(pending.length===1?"":"s");
+}
+$("clear").onclick=()=>{if(!busy){rows=[];renderRows();say("upStatus","")}};
+function readB64(file){return new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result.split(",")[1]);fr.onerror=()=>no(fr.error);fr.readAsDataURL(file)})}
+$("go").onclick=async()=>{
+ if(!DEMO&&!token){say("upStatus","Save your token first.","bad");return}
+ busy=true;renderRows();say("upStatus","");
+ const todo=rows.filter(r=>r.state!=="done");
+ try{
+  // Upload in groups so a large batch shows progress and each group lands as one commit.
+  for(let i=0;i<todo.length;i+=10){
+   const group=todo.slice(i,i+10);
+   for(const r of group){r.state="up";refresh();if(!DEMO)r.blob=(await gh("/git/blobs",{method:"POST",body:JSON.stringify({content:await readB64(r.file),encoding:"base64"})})).sha}
+   const files=[];
+   const apply=man=>{
+    files.length=0;
+    for(const r of group){
+     const attempt=r.year+"-"+r.month;
+     if(r.type==="sa"){
+      const path=saPath(r);man.suggested=man.suggested.filter(e=>!(e.attempt===attempt&&e.subject===r.subject));
+      man.suggested.push({attempt,subject:r.subject,file:path});files.push({path,mode:"100644",type:"blob",sha:r.blob});r.path=path;
+     }else{
+      const n=r.n&&!man.certified.some(e=>e.attempt===attempt&&e.subject===r.subject&&e.n===r.n)?r.n:nextN(man,r);
+      const path=ccPath(r,n),e={attempt,subject:r.subject,file:path,n,rank:rankLabel(r.rank)||null,name:r.name.trim()||null,marks:+r.marks,max:+r.max};
+      man.certified=man.certified.filter(x=>x.file!==path);man.certified.push(e);files.push({path,mode:"100644",type:"blob",sha:r.blob});r.path=path;r.n=n;
+     }
+    }
+   };
+   if(DEMO){apply(manifest);await new Promise(ok=>setTimeout(ok,500))}
+   else await commit("Add "+group.map(r=>r.file.name).join(", ").slice(0,200),man=>{apply(man);return files});
+   group.forEach(r=>r.state="done");refresh();
+  }
+  say("upStatus",DEMO?"Preview: nothing was uploaded.":"Uploaded. The public page shows the new files in about a minute.","ok");
+ }catch(e){todo.filter(r=>r.state==="up").forEach(r=>{r.state="err";r.msg="Failed"});say("upStatus","Upload stopped: "+e.message+". Files marked Uploaded are saved; press Upload to retry the rest.","bad")}
+ busy=false;renderRows();if(manifest)fillAttempts();renderManage();
+};
+
+// ---------- Manage ----------
+async function loadManifest(){
+ try{manifest=await readManifest(BRANCH);fillAttempts();renderManage();if(rows.length)refresh()}
+ catch(e){$("mList").innerHTML="";$("mList").appendChild(el("p","muted","Couldn't read the list of files: "+e.message))}
+}
+function fillAttempts(){
+ const key=a=>{const[y,m]=a.split("-");return y*10+MONTHS.indexOf(m)};
+ const atts=[...new Set([...manifest.suggested,...manifest.certified].map(e=>e.attempt))].sort((a,b)=>key(b)-key(a));
+ const a=$("mAtt"),cur=a.value;a.innerHTML="";atts.forEach(x=>{const o=el("option",null,x.replace("-"," ").split(" ").reverse().join(" "));o.value=x;a.appendChild(o)});if(atts.includes(cur))a.value=cur;
+ const s=$("mSub");if(!s.options.length)SUBJ.forEach(x=>{const o=el("option",null,SUBJ_NAME[x]);o.value=x;s.appendChild(o)});
+}
+$("mAtt").onchange=$("mSub").onchange=()=>renderManage();
+function renderManage(){
+ const box=$("mList");box.innerHTML="";
+ if(!manifest){box.appendChild(el("p","muted","Save your token to see what's on the site."));return}
+ const a=$("mAtt").value,s=$("mSub").value;
+ const items=[...manifest.suggested.filter(e=>e.attempt===a&&e.subject===s).map(e=>({e,kind:"sa",label:"Suggested answers"+(e.unofficial?" (unofficial copy)":"")})),
+  ...manifest.certified.filter(e=>e.attempt===a&&e.subject===s).sort((x,y)=>x.n-y.n).map(e=>({e,kind:"cc",label:"CC "+e.n+([e.rank,e.name].filter(Boolean).length?": "+[e.rank,e.name].filter(Boolean).join(" · "):""),marks:e.marks+" / "+e.max}))];
+ if(!items.length){box.appendChild(el("p","muted","Nothing for this paper yet."));return}
+ items.forEach(it=>{
+  const d=el("div","item"),l=el("span");const a2=el("a",null,it.label);a2.href=it.e.file;a2.target="_blank";a2.rel="noopener";l.appendChild(a2);
+  if(it.marks)l.appendChild(el("span","mk","  "+it.marks));
+  const b=el("button","link danger","Remove");let armed=false;
+  b.onclick=async()=>{
+   if(!armed){armed=true;b.textContent="Click again to remove";setTimeout(()=>{armed=false;b.textContent="Remove"},4000);return}
+   b.disabled=true;say("mStatus","Removing…");
+   const drop=man=>{const k=it.kind==="sa"?"suggested":"certified";man[k]=man[k].filter(x=>x.file!==it.e.file)};
+   try{
+    if(DEMO)drop(manifest);
+    else await commit("Remove "+it.e.file,man=>{drop(man);return[{path:it.e.file,mode:"100644",type:"blob",sha:null}]});
+    say("mStatus","Removed.","ok");fillAttempts();renderManage();
+   }catch(e){say("mStatus","Couldn't remove it: "+e.message,"bad");b.disabled=false}
+  };
+  d.appendChild(l);d.appendChild(b);box.appendChild(d);
+ });
+}
+
+if(DEMO)$("demo").hidden=false;
+check();
+</script>
+</body>
+</html>
