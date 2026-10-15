@@ -733,6 +733,16 @@
   {
    "attempt": "2025-Sep",
    "subject": "FR",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2025-Sep_FR_CC_1_AIR2_Tejas-Mundada_53-70.pdf",
+   "n": 1,
+   "rank": "AIR 2",
+   "name": "Tejas Mundada",
+   "marks": 53,
+   "max": 70
+  },
+  {
+   "attempt": "2025-Sep",
+   "subject": "FR",
    "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2025-Sep_FR_CC_2_AIR4_Rohan-Sharma_47-70.pdf",
    "n": 2,
    "rank": "AIR 4",
@@ -748,6 +758,16 @@
    "rank": "AIR 10",
    "name": "Hardik Kachhawaha",
    "marks": 52,
+   "max": 70
+  },
+  {
+   "attempt": "2025-Sep",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2025-Sep_AFM_CC_1_AIR2_Tejas-Mundada_68-70.pdf",
+   "n": 1,
+   "rank": "AIR 2",
+   "name": "Tejas Mundada",
+   "marks": 68,
    "max": 70
   },
   {
