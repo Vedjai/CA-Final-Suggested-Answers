@@ -72,7 +72,7 @@ function build(man){
  DATA={};PAGES=man.pages||{};
  (man.suggested||[]).forEach(e=>{slot(e.attempt).sa[e.subject]=e});
  (man.certified||[]).forEach(e=>{const c=slot(e.attempt).cc;(c[e.subject]=c[e.subject]||[]).push(e)});
- Object.values(DATA).forEach(ms=>Object.values(ms).forEach(a=>Object.values(a.cc).forEach(l=>l.sort((x,y)=>x.n-y.n))));
+ Object.values(DATA).forEach(ms=>Object.values(ms).forEach(a=>Object.values(a.cc).forEach(l=>l.sort((x,y)=>y.marks/y.max-x.marks/x.max||x.n-y.n))));
 }
 function init(){
  fill(sub,"Select subject",Object.entries(SUBJECTS));
