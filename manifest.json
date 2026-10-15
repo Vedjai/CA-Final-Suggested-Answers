@@ -551,6 +551,16 @@
  ],
  "certified": [
   {
+   "attempt": "2052-May",
+   "subject": "AUD",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2052-May_AUD_CC_1_AIR16_Ashutosh-Mittal_53-38.pdf",
+   "n": 1,
+   "rank": "AIR 16",
+   "name": "Ashutosh Mittal",
+   "marks": 53,
+   "max": 38
+  },
+  {
    "attempt": "2026-May",
    "subject": "FR",
    "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-May_FR_CC_1_AIR26_Dev-Aidswani_55-70.pdf",
@@ -558,6 +568,16 @@
    "rank": "AIR 26",
    "name": "Dev Aidswani",
    "marks": 55,
+   "max": 70
+  },
+  {
+   "attempt": "2026-May",
+   "subject": "FR",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-May_FR_CC_2_AIR16_Ashutosh-Mittal_52-70.pdf",
+   "n": 2,
+   "rank": "AIR 16",
+   "name": "Ashutosh Mittal",
+   "marks": 52,
    "max": 70
   },
   {
@@ -582,6 +602,16 @@
   },
   {
    "attempt": "2026-May",
+   "subject": "DT",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-May_DT_CC_2_AIR16_Ashutosh-Mittal_50-70.pdf",
+   "n": 2,
+   "rank": "AIR 16",
+   "name": "Ashutosh Mittal",
+   "marks": 50,
+   "max": 70
+  },
+  {
+   "attempt": "2026-May",
    "subject": "IDT",
    "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-May_IDT_CC_1_AIR26_Dev-Aidswani_51-70.pdf",
    "n": 1,
@@ -589,6 +619,16 @@
    "name": "Dev Aidswani",
    "marks": 51,
    "max": 70
+  },
+  {
+   "attempt": "2026-May",
+   "subject": "IDT",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-May_IDT_CC_2_AIR16_Ashutosh-Mittal_48-43.pdf",
+   "n": 2,
+   "rank": "AIR 16",
+   "name": "Ashutosh Mittal",
+   "marks": 48,
+   "max": 43
   },
   {
    "attempt": "2026-May",
