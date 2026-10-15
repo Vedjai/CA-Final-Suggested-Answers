@@ -101,7 +101,7 @@ function render(){
   const d=el("div","cc");d.appendChild(el("h3","","Certified copies ("+ccs.length+")"));
   const ul=el("ul");
   ccs.forEach(e=>{const li=el("li"),a=el("a");a.href=url(e.file);a.target="_blank";a.rel="noopener";
-   const w=el("span","who");w.appendChild(el("span","rk",e.rank||"Copy "+e.n));if(e.name)w.appendChild(document.createTextNode(" · "+e.name));
+   const w=el("span","who");w.appendChild(el("span","rk",e.name||e.rank||"Certified copy"));if(e.name&&e.rank)w.appendChild(document.createTextNode(" ("+e.rank+")"));
    a.appendChild(w);a.appendChild(el("span","mk",e.marks+" / "+e.max));li.appendChild(a);ul.appendChild(li)});
   d.appendChild(ul);c.appendChild(d);
  }
