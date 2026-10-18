@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF Viewer</title>
+<meta name="robots" content="noindex">
+<style>
+:root{--bg:#e9ebf1;--card:#fff;--text:#1c2030;--muted:#677087;--line:#dde1ec;--accent:#2f5bea;--accent-t:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0f15;--card:#1b1e29;--text:#e8ebf5;--muted:#9aa3bb;--line:#2b3042;--accent:#6c8cff;--accent-t:#0e1220;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d0f15;--card:#1b1e29;--text:#e8ebf5;--muted:#9aa3bb;--line:#2b3042;--accent:#6c8cff;--accent-t:#0e1220;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:8px max(12px,env(safe-area-inset-left,0px));background:var(--card);border-bottom:1px solid var(--line)}
+#name{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#count{color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.85rem}
+button,.dl{font:inherit;font-weight:600;min-width:36px;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.dl{background:var(--accent);color:var(--accent-t);border-color:var(--accent)}
+button:focus-visible,.dl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:520px){#count{display:none}}
+#pages{padding:12px 8px 40px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.page{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);max-width:100%}
+.page canvas{display:block;width:100%;height:100%}
+#msg{max-width:520px;margin:48px auto;padding:0 16px;text-align:center;color:var(--muted)}
+#msg .dl{margin-top:14px}
+</style>
+</head>
+<body>
+<header>
+ <span id="name">Loading…</span>
+ <span id="count"></span>
+ <button id="out" type="button" aria-label="Zoom out">−</button>
+ <button id="in" type="button" aria-label="Zoom in">+</button>
+ <a id="dl" class="dl" href="#" download>Download</a>
+</header>
+<div id="pages"></div>
+<div id="msg" aria-live="polite">Loading PDF…</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// Opens a PDF from the site inside the page, so it shows on phones too (Android Chrome only downloads PDFs).
+// Certified copies sit on a GitHub Release, which only serves downloads, so they are read through PDF_PROXY:
+// a Cloudflare Worker that returns the same file with inline and CORS headers.
+const PDF_PROXY="";
+const RELEASE="https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/";
+const q=new URLSearchParams(location.search),f=q.get("f")||"";
+const $=id=>document.getElementById(id),msg=$("msg");
+const file=decodeURIComponent(f.split("/").pop()||"");
+const isRel=f.toLowerCase().startsWith(RELEASE.toLowerCase());
+// Only this site's own files and the certified-copies release are allowed.
+const ok=/^[\w.\/-]+\.pdf$/i.test(f)&&!f.includes("..")||isRel;
+const src=isRel?(PDF_PROXY?PDF_PROXY.replace(/\/?$/,"/")+encodeURIComponent(file):""):f;
+$("name").textContent=q.get("t")||file.replace(/\.pdf$/i,"").replace(/[_-]+/g," ");
+document.title=$("name").textContent;
+$("dl").href=ok?f:"#";
+
+function fail(t){
+ msg.textContent=t;
+ if(ok){const a=document.createElement("a");a.className="dl";a.href=f;a.textContent="Download PDF";msg.appendChild(document.createElement("br"));msg.appendChild(a)}
+}
+
+let doc,zoom=1,pages=[],io;
+const dpr=()=>Math.min(window.devicePixelRatio||1,2);
+const baseW=()=>Math.min(document.documentElement.clientWidth-16,900);
+
+function size(p){
+ const w=Math.round(baseW()*zoom);p.el.style.width=w+"px";p.el.style.height=Math.round(w*p.ratio)+"px";
+}
+async function draw(p){
+ if(p.busy||p.zoom===zoom)return;p.busy=true;
+ try{
+  const pg=await doc.getPage(p.n),v0=pg.getViewport({scale:1});
+  p.ratio=v0.height/v0.width;size(p);
+  const w=Math.round(baseW()*zoom),vp=pg.getViewport({scale:w*dpr()/v0.width});
+  const c=document.createElement("canvas");c.width=Math.floor(vp.width);c.height=Math.floor(vp.height);
+  const z=zoom;await pg.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+  p.el.replaceChildren(c);p.zoom=z;pg.cleanup();
+ }catch(e){console.error(e)}
+ p.busy=false;
+ if(p.zoom!==zoom&&p.visible)draw(p);
+}
+function relayout(){pages.forEach(p=>{size(p);if(p.visible)draw(p)})}
+
+async function open(){
+ if(!ok)return fail("This link doesn't point to a PDF on this site.");
+ if(!src)return fail("In-page viewing isn't set up for certified copies yet.");
+ pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+ try{
+  // Range requests: big scans start showing before the whole file has downloaded.
+  doc=await pdfjsLib.getDocument({url:src,disableAutoFetch:true,disableStream:true,rangeChunkSize:262144}).promise;
+ }catch(e){console.error(e);return fail("Couldn't open this PDF here. You can download it instead.")}
+ msg.remove();
+ const first=await doc.getPage(1),v=first.getViewport({scale:1}),ratio=v.height/v.width;
+ $("count").textContent=doc.numPages+(doc.numPages===1?" page":" pages");
+ io=new IntersectionObserver(es=>es.forEach(e=>{const p=pages[+e.target.dataset.i];p.visible=e.isIntersecting;if(p.visible)draw(p)}),{rootMargin:"800px 0px"});
+ for(let n=1;n<=doc.numPages;n++){
+  const el=document.createElement("div");el.className="page";el.dataset.i=n-1;
+  const p={n,el,ratio,zoom:0};pages.push(p);size(p);$("pages").appendChild(el);io.observe(el);
+ }
+}
+$("in").onclick=()=>{zoom=Math.min(zoom*1.25,4);relayout()};
+$("out").onclick=()=>{zoom=Math.max(zoom/1.25,.4);relayout()};
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(relayout,200)});
+if(window.pdfjsLib)open();else fail("Couldn't load the PDF viewer. You can download the file instead.");
+</script>
+</body>
+</html>
