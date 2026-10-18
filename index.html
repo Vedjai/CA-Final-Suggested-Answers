@@ -67,8 +67,15 @@ let DATA={},PAGES={};
 function fill(sel,ph,items){sel.innerHTML="";const o=document.createElement("option");o.value="";o.textContent=ph;sel.appendChild(o);items.forEach(([v,t])=>{const e=document.createElement("option");e.value=v;e.textContent=t;sel.appendChild(e)})}
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 const url=f=>/^https?:/.test(f)?f:FILE_BASE+f;
-// PDFs open in viewer.html, which shows them inside the page on every device.
-const view=(f,t)=>"viewer.html?f="+encodeURIComponent(url(f))+(t?"&t="+encodeURIComponent(t):"");
+// Certified copies sit on a GitHub Release, which only serves downloads; this Cloudflare Worker
+// serves the same file inline, so it opens in the browser's own PDF viewer (with its OCR).
+const PDF_PROXY="https://ca-final-pdf.vedansh2005jaipuriya.workers.dev/";
+const RELEASE="https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/";
+// Android Chrome has no built-in PDF viewer and only downloads, so phones there get viewer.html.
+const ANDROID=/Android/i.test(navigator.userAgent);
+const view=(f,t)=>{const u=url(f);
+ if(ANDROID)return "viewer.html?f="+encodeURIComponent(u)+(t?"&t="+encodeURIComponent(t):"");
+ return u.toLowerCase().startsWith(RELEASE.toLowerCase())?PDF_PROXY+u.slice(RELEASE.length):u};
 function slot(a){const[y,m]=a.split("-");DATA[y]=DATA[y]||{};return DATA[y][m]=DATA[y][m]||{sa:{},cc:{}}}
 function build(man){
  DATA={};PAGES=man.pages||{};
