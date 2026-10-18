@@ -40,7 +40,7 @@ button:focus-visible,.dl:focus-visible{outline:2px solid var(--accent);outline-o
 // Opens a PDF from the site inside the page, so it shows on phones too (Android Chrome only downloads PDFs).
 // Certified copies sit on a GitHub Release, which only serves downloads, so they are read through PDF_PROXY:
 // a Cloudflare Worker that returns the same file with inline and CORS headers.
-const PDF_PROXY="";
+const PDF_PROXY="https://ca-final-pdf.vedansh2005jaipuriya.workers.dev";
 const RELEASE="https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/";
 const q=new URLSearchParams(location.search),f=q.get("f")||"";
 const $=id=>document.getElementById(id),msg=$("msg");
