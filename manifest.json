@@ -823,6 +823,106 @@
   {
    "attempt": "2026-Jan",
    "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_6_AIR40_Mehul_54-70.pdf",
+   "n": 6,
+   "rank": "AIR 40",
+   "name": "Mehul",
+   "marks": 54,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_7_Rohit-Bhatt_53-70.pdf",
+   "n": 7,
+   "rank": null,
+   "name": "Rohit Bhatt",
+   "marks": 53,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_8_Viva-Furiya_51-70.pdf",
+   "n": 8,
+   "rank": null,
+   "name": "Viva Furiya",
+   "marks": 51,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_9_AIR17_Vinit-Kothari_50-70.pdf",
+   "n": 9,
+   "rank": "AIR 17",
+   "name": "Vinit Kothari",
+   "marks": 50,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_10_Atharva_49-70.pdf",
+   "n": 10,
+   "rank": null,
+   "name": "Atharva",
+   "marks": 49,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_11_AIR45_Chirayu-Jindal_49-70.pdf",
+   "n": 11,
+   "rank": "AIR 45",
+   "name": "Chirayu Jindal",
+   "marks": 49,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_12_AIR44_Yash-Bramecha_48-70.pdf",
+   "n": 12,
+   "rank": "AIR 44",
+   "name": "Yash Bramecha",
+   "marks": 48,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_13_Bhawna_47-70.pdf",
+   "n": 13,
+   "rank": null,
+   "name": "Bhawna",
+   "marks": 47,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_14_AIR44_Gautam_47-70.pdf",
+   "n": 14,
+   "rank": "AIR 44",
+   "name": "Gautam",
+   "marks": 47,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_15_Namish_47-70.pdf",
+   "n": 15,
+   "rank": null,
+   "name": "Namish",
+   "marks": 47,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
    "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_16_AIR28_Meet-Shah_46-70.pdf",
    "n": 16,
    "rank": "AIR 28",
