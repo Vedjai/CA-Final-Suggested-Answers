@@ -823,6 +823,36 @@
   {
    "attempt": "2026-Jan",
    "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_3_AIR10_Jayesh_57-70.pdf",
+   "n": 3,
+   "rank": "AIR 10",
+   "name": "Jayesh",
+   "marks": 57,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_4_AIR40_Shreyansh_57-70.pdf",
+   "n": 4,
+   "rank": "AIR 40",
+   "name": "Shreyansh",
+   "marks": 57,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_5_54-70.pdf",
+   "n": 5,
+   "rank": null,
+   "name": null,
+   "marks": 54,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
    "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_6_AIR40_Mehul_54-70.pdf",
    "n": 6,
    "rank": "AIR 40",
