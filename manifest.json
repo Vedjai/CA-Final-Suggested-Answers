@@ -822,6 +822,106 @@
   },
   {
    "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_16_AIR28_Meet-Shah_46-70.pdf",
+   "n": 16,
+   "rank": "AIR 28",
+   "name": "Meet Shah",
+   "marks": 46,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_17_AIR22_44-70.pdf",
+   "n": 17,
+   "rank": "AIR 22",
+   "name": null,
+   "marks": 44,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_18_44-70.pdf",
+   "n": 18,
+   "rank": null,
+   "name": null,
+   "marks": 44,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_19_AIR48_Arunmozhidevan_44-70.pdf",
+   "n": 19,
+   "rank": "AIR 48",
+   "name": "Arunmozhidevan",
+   "marks": 44,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_20_AIR44_Aman-Patel_43-70.pdf",
+   "n": 20,
+   "rank": "AIR 44",
+   "name": "Aman Patel",
+   "marks": 43,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_21_AIR44_Prateek-Jhawar_43-70.pdf",
+   "n": 21,
+   "rank": "AIR 44",
+   "name": "Prateek Jhawar",
+   "marks": 43,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_22_AIR44_Raman-Goyal_42-70.pdf",
+   "n": 22,
+   "rank": "AIR 44",
+   "name": "Raman Goyal",
+   "marks": 42,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_23_AIR31_Muthukrishnan-P_41-70.pdf",
+   "n": 23,
+   "rank": "AIR 31",
+   "name": "Muthukrishnan P",
+   "marks": 41,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_24_AIR39_Nilesh-Suthar_41-70.pdf",
+   "n": 24,
+   "rank": "AIR 39",
+   "name": "Nilesh Suthar",
+   "marks": 41,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
+   "subject": "AFM",
+   "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AFM_CC_25_AIR36_Udeshay-Teotia_41-70.pdf",
+   "n": 25,
+   "rank": "AIR 36",
+   "name": "Udeshay Teotia",
+   "marks": 41,
+   "max": 70
+  },
+  {
+   "attempt": "2026-Jan",
    "subject": "AUD",
    "file": "https://github.com/Vedjai/CA-Final-Suggested-Answers/releases/download/certified-copies/2026-Jan_AUD_CC_1_AIR14_Mohit-Sukhani_47-70.pdf",
    "n": 1,
